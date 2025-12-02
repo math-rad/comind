@@ -1,0 +1,23 @@
+{
+  "name": "comind",
+  "version": "1.0.0",
+  "description": "**EVERYTHING IS A NODE** ###### meant for me to read as of writing this",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/math-rad/comind.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/math-rad/comind/issues"
+  },
+  "homepage": "https://github.com/math-rad/comind#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "path": "^0.12.7"
+  }
+}
