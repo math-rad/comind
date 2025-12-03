@@ -3,6 +3,10 @@ const shellOutputFeed = document.getElementById("shell-output-feed")
 shellInput.focus
 shellInput.focus()
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 let filteredData
 
 function clearOutput() {
@@ -14,7 +18,7 @@ function clearOutput() {
 var WORDS
 
 (async () => {
-    WORDS = (await (await fetch("/core/txt/words")).text()).split('\n')
+    WORDS = (await (await fetch("https://comind.math-rad.com/core/txt/words")).text()).split('\n')
 })()
 
 const CACHE = {}
@@ -23,35 +27,47 @@ const CACHE = {}
 
 function output(content) {
     const message = document.createElement("label")
-    message.textContent = content
+    message.innerHTML = content
     shellOutputFeed.appendChild(message)
 }
 
-fetch("/core/json/english-filtered").then(response => response.json().then(data => filteredData = data))
+fetch("https://comind.math-rad.com/core/json/english-filtered").then(response => response.json().then(data => filteredData = data))
+let ID = 0
+shellInput.addEventListener("input", async (event) => {
+    const ref = ++ID
 
-shellInput.addEventListener("input", (event) => {
     const currentInput = shellInput.value
-
     clearOutput()
-    const hit = WORDS.filter((word) => word.startsWith(currentInput))
-    let x = 100
-    while (x > 0) {
-        x--
-        output(hit[x])
+    const hit = WORDS.filter((word) => word.includes(currentInput))
+    hit.sort((a, b) => b-a)
+    const max = 100
+    let k = 0
+    let i = 0
+    while (true) {
         var meaning = ""
-        if (hit[x]) {
-            const X = filteredData[hit[x].toUpperCase()]
+        if (hit[i]) {
+            const X = filteredData[hit[i].toUpperCase()]
             if (X) {
                 const Y = X.MEANINGS
                 if (Y) {
-                    meaning = Y[0]
-    
+                    if (Y[0]) {
+                        output("<br>" + hit[i].replaceAll(currentInput, `<b><u>${currentInput}</u></b>`))
+                        Y.forEach(element => {
+                            output(`[${element[0]}]: ${element[1]}`)
+                        });
+                    }
+                    //output(`${hit[i]}${(Y[0] && Y[1] && `[${Y[0]}]: ${Y[1]}`) || ""}`)
                 }
             }
         }
-        output(`${hit[x]}${meaning != null && `[${meaning[0]}]: ` + meaning[1]}`)
+        await sleep(1)
+        if (ID != ref) {
+            return;
+        }
+       
+        //output(`${hit[i]}${meaning != null && `[${meaning[0]}]: ` + meaning[1]}`)
 
-
+        i++
     }
 
 })
