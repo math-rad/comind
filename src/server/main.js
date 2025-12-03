@@ -9,8 +9,12 @@ fileServer.get("/", async function(req, response) {
     response.redirect("/shell")
 })
 
+fileServer.get("/core/:type/:file", async function(request, response) {
+    response.sendFile(path.join(__dirname, '..', 'client', 'content', `${request.params.file}.${request.params.type}`)) 
+})
+
 fileServer.get("/shell", async function(request, response) {
-    response.sendFile(path.join(__dirname, '..', 'client', 'shell.html'))
+    response.sendFile(path.join(__dirname, '..', 'client', 'content', 'shell.html'))
 })
 
 fileServer.listen(port, () => {

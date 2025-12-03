@@ -1,0 +1,28 @@
+@font-face {
+    font-family: shell-font;
+    src: url("/core/ttf/shell-font"),
+         url("/proxy/5578/core/ttf/shell-font")
+}
+
+:root {
+    background-color: black;
+}
+
+#shell-root {
+    width: 100%;
+}
+
+input {
+    width: 100%;
+    color: white;
+    font-size: x-large;
+    box-sizing: border-box;
+    font-family: shell-font;
+    background-color: black;
+    border-color: black;
+    border-style: none;
+}
+
+*:focus {
+    outline: none;
+}
