@@ -12,7 +12,9 @@
     width: 100%;
 }
 
-input {
+
+.shell-base,
+#shell-output-feed label {
     width: 100%;
     color: white;
     font-size: x-large;
@@ -21,6 +23,15 @@ input {
     background-color: black;
     border-color: black;
     border-style: none;
+}
+
+#shell-output-feed label {
+    color: grey;
+}
+
+#shell-output-feed {
+    display: flex;
+    flex-direction: column;
 }
 
 *:focus {
