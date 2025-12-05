@@ -6,23 +6,36 @@
 
 
 
+const fs = require("node:fs")
 
-const fs = require("fs")
 const UUID = require("uuid")
-
-
 const storageVersion = "v1"
+const quickPath = "./storage.json"
+
 
 const API = {}
 
 const META = {}
 const toStore: Array<NODE> = []
 
+const quickStorage = require(quickPath)
+
+async function writeQuickStorage() {
+    await fs.writeFile(quickPath, JSON.stringify(quickStorage))
+    console.log("wrote")
+
+}
+
+quickStorage.nodes.x = 1;
+writeQuickStorage()
+
+function quickStore(node: NODE) {
+}
+
 async function markForStorage(targetNode: NODE) {
     toStore.push(targetNode)
 }
 
-const storageDirectory = path
 
 function writeNode(targetNode: NODE) {
 
@@ -104,11 +117,11 @@ class node extends NODE {
 }
 
 class scriptNode extends node {
-    constructor(src: string) {
+    constructor(src: string,) {
         super()
         this.storage.src = src
         this.tag(TAG_SET.internal.functional)
+        
     }
 }
 
-console.log(1)
