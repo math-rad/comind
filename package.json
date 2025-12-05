@@ -4,7 +4,7 @@
   "description": "**EVERYTHING IS A NODE** ###### meant for me to read as of writing this",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./src/server/API.ts"
   },
   "repository": {
     "type": "git",

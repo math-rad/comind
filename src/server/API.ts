@@ -39,6 +39,10 @@ const storageHandler = new class {
     }
 }
 
+interface edgeContainer {
+    string: 
+}
+
 class NODE {
     ID: string
     type: TYPE | string
@@ -91,6 +95,6 @@ const test = new TAG("something")
 const someEnum = new ENUM("classes", [
     new ENUM("math"),
     new ENUM("english")
-])
 
-console.log(someEnum)
+
+])
