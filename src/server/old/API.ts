@@ -1,6 +1,6 @@
 import { v7 } from "uuid"
 import { readFile, writeFile } from "fs/promises"
-import { loadEnvFile } from "process"
+import fixedIds from "./fixed-ids.json"
 
 
 const storageHandler = new class {
@@ -39,16 +39,16 @@ const storageHandler = new class {
     }
 }
 
-interface edgeContainer {
-    string: 
-}
+
 
 class NODE {
     ID: string
-    type: TYPE | string
-    tags: (TAG | string)[]
-    constructor() {
-        this.ID = v7()
+    type?: TYPE | string
+    tags: Array<TAG | string>
+    modified?: Array<string>
+    constructor(ID?: string) {
+        this.ID = ID || v7()
+        this.tags = []
     }
     tag(tag: TAG | string) {
         this.tags.push(tag)
@@ -59,8 +59,8 @@ class ENUM extends NODE {
     members: Record<string, ENUM>
     label: string
     parent: ENUM
-    constructor(label: string, members?: Array<ENUM>) {
-        super()
+    constructor(label: string, members?: Array<ENUM>, ID?: string) {
+        super(ID)
         this.label = label
         this.members = {}
         for (var member of members || []) {
@@ -71,8 +71,8 @@ class ENUM extends NODE {
 }
 
 class TYPE extends ENUM {
-    constructor(label: string) {
-        super(label)
+    constructor(label: string, typeChildren?: Array<TYPE>, ID?: string) {
+        super(label, typeChildren, ID)
         this.type = "ENUM"
     }
 }

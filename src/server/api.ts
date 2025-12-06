@@ -1,127 +1,69 @@
-// base parent 
-// do add methods to "storage" such that changes propagate updates to file reference
-// do set up a system to occasionally write to node files instead of instantly
-// do make sure that nodes are all saved when process is terminated
-// do take note of unsaved storages in nodes 
+import { v7 } from "uuid"
+import { readFile, writeFile } from "fs/promises"
+import fixedIds from "./fixed-ids.json" with {type: "json"}
 
+export class API {
+    public static fetchNode(NodeId: string): InstanceType<typeof API.Node> {
+        return new this.Node()
+    }
 
+    public static Node = class NODE {
+        public ID: string
+        public type?: string
+        public tags: Array< | string>
+        public modified?: Array<string>
 
-const fs = require("node:fs")
-
-const UUID = require("uuid")
-const storageVersion = "v1"
-const quickPath = "./storage.json"
-
-
-const API = {}
-
-const META = {}
-const toStore: Array<NODE> = []
-
-const quickStorage = require(quickPath)
-
-async function writeQuickStorage() {
-    await fs.writeFile(quickPath, JSON.stringify(quickStorage))
-    console.log("wrote")
-
-}
-
-quickStorage.nodes.x = 1;
-writeQuickStorage()
-
-function quickStore(node: NODE) {
-}
-
-async function markForStorage(targetNode: NODE) {
-    toStore.push(targetNode)
-}
-
-
-function writeNode(targetNode: NODE) {
-
-}
-interface NODE {
-    id: string,
-    storage: Record<string, any>,
-    meta: {
-        tags?: Array<string>,
-        type?: string
-        references: {
-            moment?: string
-            connections?: String[]
+        constructor(ID?: string) {
+            this.ID = ID || v7() // should I consider v7 parameters?
+            this.tags = []
         }
 
+        public tag() {
+
+        }
     }
-}
 
+    public static Enum = class Enum extends API.Node {
+        public members: (Enum | string)[]
+        public parent?: typeof API.Node
+        public label: string
 
-const TAG_SET = {
-    type: {
-        script: "SCRIPT",
-        moment: "MOMENT"
-    },
-    internal: {
-        organizational: "INTERNAL_ORGANIZATIONAL",
-        functional: "INTERNAL_FUNCTIONAL"
-    },
-    hide: "HIDDEN",
-    time: {
-        moment: "TIME_MOMENT",
-        second: "TIME_SECOND",
-        minute: "TIME_MINUTE",
-        hour: "TIME_HOUR",
-        day: "TIME_DAY",
-        week: "TIME_WEEK",
-        month: "TIME_MONTH",
-        year: "TIME_YEAR",
-        decade: "TIME_DECADE"
-    }
-}
+        type = fixedIds.types.enum
 
+        constructor(label: string, members?: (Enum | string)[], ID?: string) {
+            super(ID)
+            this.label = label
+            this.members = []
+            if (members) {
+                for (var member of members) {
+                    switch (typeof (member)) {
+                        case "string": {
+                            //@ts-expect-error
+                            this.parent = this
 
-class NODE {
-    constructor() {
-        this.id = UUID.v7()
-        this.storage = {}
-        this.meta = {
-            references: {
-
+                        }
+                    }
+                }
             }
+
         }
     }
-    tag(...tags: Array<string>) {
-        if (!this.meta.tags) {
-            this.meta.tags = tags
-        } else {
-            this.meta.tags.concat(tags)
+
+    public static Type = class Type extends API.Enum {
+        type = fixedIds.types.type
+
+        constructor(label: string, typeChildren?: Type[], ID?: string) {
+            super(label, typeChildren, ID)
         }
     }
-}
 
-class timeNode extends NODE {
-    constructor() {
-        super()
-        this.storage.moment = Date.now()
-        this.tag(TAG_SET.time.moment, TAG_SET.internal.organizational)
+    public static Tag = class Tag extends API.Enum {
+        public type = fixedIds.types.tag
     }
+
+    types = new API.Type("enum", [
+        new API.Type("type", [], fixedIds.types.type),
+        new API.Type("tag", [], fixedIds.types.tag)
+    ], fixedIds.types.enum)
+    
 }
-
-
-class node extends NODE {
-    constructor() {
-        super()
-        const momentNode = new timeNode()
-        this.meta.references.moment = momentNode.id
-
-    }
-}
-
-class scriptNode extends node {
-    constructor(src: string,) {
-        super()
-        this.storage.src = src
-        this.tag(TAG_SET.internal.functional)
-        
-    }
-}
-
