@@ -1,7 +1,18 @@
 {
     "types": {
-        "enum": "019af0e3-d0b8-76ed-974e-3bdecc6f19d3",
-        "type": "019af0e5-0b86-738a-ac06-f21a298cf14e",
-        "tag": "019af0e4-d1c3-755e-a3ba-55c7192b8658"
+        "container": "type-container-019af203-5bcd-751e-9778-a011ecd5ae3f",
+        "enum": "type-enum-019af0e3-d0b8-76ed-974e-3bdecc6f19d3",
+        "type": "type-type-019af0e5-0b86-738a-ac06-f21a298cf14e",
+        "tag": "type-tag-019af0e4-d1c3-755e-a3ba-55c7192b8658",
+        "module": "type-module019af1a9-0bd4-752c-a1e9-50262e688183"
+    },
+    "tags": {
+        "tag": "019af1b1-a997-7179-9537-ba1849d107bb",
+        "internal": {
+            "internal": "019af1aa-a0eb-71c1-bf9b-31c301b5d66e",
+            "organizational": "019af1ab-625d-778e-adef-28965a49aa53",
+            "fundamental": "019af1ac-0eb7-754d-9c3c-3a4a41d7eeab",
+            "functional": "019af1ac-de6d-73eb-83a7-8ea01bb458a8"
+        }
     }
 }

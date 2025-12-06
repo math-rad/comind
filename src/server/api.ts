@@ -3,67 +3,79 @@ import { readFile, writeFile } from "fs/promises"
 import fixedIds from "./fixed-ids.json" with {type: "json"}
 
 export class API {
+    public static nodes: Record<string, InstanceType<typeof API.Node>> = {}
     public static fetchNode(NodeId: string): InstanceType<typeof API.Node> {
-        return new this.Node()
+        return API.nodes[NodeId]
     }
 
-    public static Node = class NODE {
+    public static Node = class {
         public ID: string
         public type?: string
-        public tags: Array< | string>
-        public modified?: Array<string>
+        public modified?: string
+        public edges: Record<number | string, InstanceType<typeof API.Node> | string>
 
         constructor(ID?: string) {
             this.ID = ID || v7() // should I consider v7 parameters?
-            this.tags = []
+            this.edges = {}
+
+            API.nodes[this.ID] = this
         }
 
-        public tag() {
-
+        public attach(node: InstanceType<typeof API.Node>, label: string) {
+            this.edges[label] = node
         }
     }
 
-    public static Enum = class Enum extends API.Node {
-        public members: (Enum | string)[]
-        public parent?: typeof API.Node
+    public static Container = class extends API.Node {
+        public members: (InstanceType<typeof API.Node> | string)[]
         public label: string
-
-        type = fixedIds.types.enum
-
-        constructor(label: string, members?: (Enum | string)[], ID?: string) {
+        constructor(label: string, members?: Array<InstanceType<typeof API.Node> | string>, ID?: string) {
             super(ID)
+            this.members = members || []
             this.label = label
-            this.members = []
+
             if (members) {
                 for (var member of members) {
                     switch (typeof (member)) {
                         case "string": {
-                            //@ts-expect-error
-                            this.parent = this
-
+                            this.addMember(API.nodes[member])
+                            break
+                        };
+                        default: {
+                            this.addMember(member)
                         }
                     }
                 }
             }
-
         }
+
+        addMember(node: InstanceType<typeof API.Node> | string) {
+            this.members.push(node);
+            (typeof(node) == "string"? API.nodes[node] : node).attach(this, this.label)
+            
+        }
+    }
+
+    public static Enum = class Enum extends API.Container {
+        type = fixedIds.types.enum
     }
 
     public static Type = class Type extends API.Enum {
         type = fixedIds.types.type
 
-        constructor(label: string, typeChildren?: Type[], ID?: string) {
-            super(label, typeChildren, ID)
-        }
     }
 
     public static Tag = class Tag extends API.Enum {
         public type = fixedIds.types.tag
+        
     }
 
-    types = new API.Type("enum", [
-        new API.Type("type", [], fixedIds.types.type),
-        new API.Type("tag", [], fixedIds.types.tag)
-    ], fixedIds.types.enum)
-    
+    constructor() {
+        new API.Container("types", [
+            new API.Type("container", [], fixedIds.types.container),
+            new API.Type("enum", [], fixedIds.types.enum),
+            new API.Type("tag", [], fixedIds.types.tag),
+            new API.Type("module", [], fixedIds.types.module),
+        ], "types")
+    }
 }

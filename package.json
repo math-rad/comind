@@ -4,7 +4,8 @@
   "description": "**EVERYTHING IS A NODE** ###### meant for me to read as of writing this",
   "main": "index.js",
   "scripts": {
-    "test": "node ./src/server/api.ts"
+    "api-test": "node ./src/server/api.ts",
+    "func-test": "node ./src/server/scripttest.ts"
   },
   "repository": {
     "type": "git",
