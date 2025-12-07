@@ -9,4 +9,4 @@ const myEnum = new Enum("myContainer", [
     new Enum("that", [], "thatid")
 ], "asd")
 
-const MyInterface = new Interface()
+console.log(colorize(JSON.stringify(comindAPI.nodes, undefined, '\t')))
