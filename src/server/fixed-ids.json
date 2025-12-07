@@ -4,15 +4,27 @@
         "enum": "type-enum-019af0e3-d0b8-76ed-974e-3bdecc6f19d3",
         "type": "type-type-019af0e5-0b86-738a-ac06-f21a298cf14e",
         "tag": "type-tag-019af0e4-d1c3-755e-a3ba-55c7192b8658",
-        "module": "type-module019af1a9-0bd4-752c-a1e9-50262e688183"
+        "module": "type-module019af1a9-0bd4-752c-a1e9-50262e688183",
+        "file": "019af6e1-ff3a-72ec-9721-30e158016e6c",
+        "script": "019af6e5-d61a-751f-b449-5384a06e41c5",
+        "interface": "019af706-d1f0-71ac-8c53-2c9cfbf0e9fe"
     },
     "tags": {
         "tag": "019af1b1-a997-7179-9537-ba1849d107bb",
         "internal": {
             "internal": "019af1aa-a0eb-71c1-bf9b-31c301b5d66e",
             "organizational": "019af1ab-625d-778e-adef-28965a49aa53",
-            "fundamental": "019af1ac-0eb7-754d-9c3c-3a4a41d7eeab",
+            "primitive": "019af1ac-0eb7-754d-9c3c-3a4a41d7eeab",
+            "document": "019af6e9-125f-76b6-aad9-f7151bcb687a",
             "functional": "019af1ac-de6d-73eb-83a7-8ea01bb458a8"
+        }
+    },
+    "enums": {
+        "interface": {
+            "textual": "019af6f1-8668-7529-980f-8c4d91974ead",
+            "semitextual": "019af6f1-45f2-71a7-9f71-12fe0d058405",
+            "canvas": "019af6f0-2a90-7738-a377-e9c140c0515a",
+            "custom": "019af6f0-081b-739a-aac5-aefb78b4f74d"
         }
     }
 }
