@@ -127,29 +127,11 @@ export class API {
         }
     }
 
-    public static Script = class Script extends API.File {
-        constructor(path: string, label: string, ID?: string) {
-            super(path, label, ID)
-            this.setType(fixedIds.types.script)
-            this.tag(fixedIds.tags.internal.functional)
-        }
-    }
-
     public static interfaceEnums: {
         textual: InstanceType<typeof API.Enum>
         semitextual: InstanceType<typeof API.Enum>
         canvas: InstanceType<typeof API.Enum>
         custom: InstanceType<typeof API.Enum>
-    }
-
-    public static Module = class Module extends API.Container {
-        entryScript: InstanceType<typeof API.Script>
-        constructor(label: string, environment: (InstanceType<typeof API.File>)[], ID?: string, entryScript: InstanceType<typeof API.Script>) {
-            super(label, environment, ID)
-            this.setType(fixedIds.types.module)
-            this.tag(fixedIds.tags.internal.organizational)
-            this.entryScript = entryScript
-        }
     }
 
     public static Interface = class extends API.Node_sys_layer {
@@ -162,11 +144,6 @@ export class API {
             this.mode = mode
             this.source = source
         }
-    }
-
-
-    public static indexers = {
-        //tag = (node: InstanceType<typeof API.Node> | string) => API.getNode(node).edges
     }
 
     constructor() {

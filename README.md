@@ -7,11 +7,11 @@
 
 *   Every node is identified by a UUID
 
+neoj4!!!
+
 #### Querying & Indexing
 
-querying is fundamentally going to be reliant on "nextId" + "privID" + generating routes from the linear link and then denoting which qualified for the route(e.g, has tag or type, contains content x, or has label content yz)
 
-yeah im gonna have a 'routes' become an edge in a node, and when theres a split(e.g, the vs that) it turns into an array, and the final 'route' node is essentially a stack of split indexes so the mode is: traverse by fetching the next node ID by indxing the edge with the top most element of the route stack, which consists of route ids at splits), and when a split is met, the stack is popped and tries that ID.
 
 The notation for querying is up in the air however the modes envisioned per both content specific and name specific are:
 
