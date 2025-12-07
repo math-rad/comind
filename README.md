@@ -6,19 +6,9 @@
 ##### **STORAGE**
 
 *   Every node is identified by a UUID
-*   Every node is stored in:
-    *   A file system where the path segregates by segments of the UUID
-        *   /\[S1\]/\[S…\]/\[SN\]/\[UUID\].json where S indicates a  shared segment/shard of a family of UUIDs
-    *   A SQL database for recording information of the node such as meta data, properties, relational information, and tags
-        *   It indexed by its UUID within the database, and, when needed, the path to the JSON storage object is implicitly known / reconstructable during runtime, therefore need NOT be stored in the SQL database
-
-### NODES
-
-*   Every node upon its creation is linked to a _special_ time node, which tracks the instantaneous moment a node was created, and potentially altered upon a more sophisticated implementation
 
 #### Querying & Indexing
 
-Each _time_ node respectively links itself to an automatically created succeeding unit of time node, i.e., second; minute; hour; day; week; month; year; etc., and each instantaneous node and unit node links itself both to its respective node and the previous instantaneous moment / unit, which makes for easy sequential tracking, and provides the fundamental framework for indexing information because querying will recall by chronological order, filtering/skipping and noting which next node matches the query criteria. 
 
 The notation for querying is up in the air however the modes envisioned per both content specific and name specific are:
 
@@ -30,7 +20,7 @@ The notation for querying is up in the air however the modes envisioned per both
     *   a potential process:
         1.  t(ignored)
         2.  th(potentially ignored)
-        3.  the → triggers trunk of tree for context specific parameter BASE “the”, searching from the LATEST node to the OLDEST node by means of the _time_ nodes' relational structure
+        3.  the → triggers trunk of tree for context specific parameter BASE “the”, searching from the LATEST node to the OLDEST node by means of the nodes' relational structure
         4.  BRANCH
             1.  the th → divides trunk, truncating all that follows not meeting criteria exclusive to 'th'
             2.  the wh → does the same as the former
