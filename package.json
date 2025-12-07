@@ -21,6 +21,7 @@
     "crypto": "^1.0.1",
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
+    "json-colorizer": "^3.0.1",
     "path": "^0.12.7",
     "uuid": "^13.0.0"
   },
