@@ -186,8 +186,8 @@ export const interfaceEnums = {
 }
 
 export class Interface extends Node_sys_layer {
-    mode: keyof(typeof interfaceEnums) 
-    constructor(mode: keyof(typeof interfaceEnums), label?: string, ID: string) {
+    mode: (typeof interfaceEnums)[keyof typeof interfaceEnums]
+    constructor(mode: (typeof interfaceEnums)[keyof typeof interfaceEnums], label?: string, ID: string) {
         super(label, ID)
         this.setType(fixedIds.types.interface)
         this.tag(fixedIds.tags.internal.functional)

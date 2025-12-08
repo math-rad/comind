@@ -1,4 +1,6 @@
-import {API, Tag} from "./api.ts";
-import {colorize} from "json-colorizer"
+import {API, Interface, InputField, NodeQueryField, Label, interfaceEnums, Enum} from "./api.ts";
+import {} from "json-colorizer"
 
-console.log(colorize(JSON.stringify(API.nodes, undefined, '\t')))
+
+const testInterface = new Interface(interfaceEnums.canvas, "myInterface", ""
+)
