@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "api-test": "node ./src/server/api.ts",
-    "func-test": "node ./src/server/scripttest.ts"
+    "func-test": "node ./src/server/testInterface.ts"
   },
   "repository": {
     "type": "git",
