@@ -2,5 +2,4 @@ import {API, Interface, InputField, NodeQueryField, Label, interfaceEnums, Enum}
 import {} from "json-colorizer"
 
 
-const testInterface = new Interface(interfaceEnums.canvas, "myInterface", ""
-)
+const testInterface = new Interface(interfaceEnums.canvas, "myInterface", "")

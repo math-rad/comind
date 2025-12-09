@@ -1,7 +1,11 @@
 import { v7 } from "uuid"
 
+import express, { response } from "express"
 
 import fixedIds from "./fixed-ids.json" with {type: "json"}
+import { execPath } from "process"
+import path, { dirname } from "path"
+import { fileURLToPath } from "url"
 
 type Predicate<T> = (item: T) => boolean
 
@@ -155,12 +159,50 @@ class UIElement extends Node_sys_layer {
     }
 }
 
-export class InputField extends UIElement {
+class UIRoot extends UIElement {
+    constructor(ID?: string, ) {
+        super(ID)
+    }
+}
+
+class UIText extends UIElement {
+    text: string
+    constructor(text: string, ID?: string) {
+        super(ID)
+        this.text= text
+    }
+}
+
+class UIContainer extends UIElement {
+
+}
+
+class UIDiv extends UIContainer {
+
+}
+
+class UISpan extends UIContainer {
+
+}
+
+class UIInput extends UIElement {
+
+}
+
+class InputField extends UIElement {
     public placeholderText?: string
     constructor(placeholderText?: string, ID?: string) {
         super(ID)
         this.placeholderText = placeholderText
     }
+}
+
+const Display = {
+    block: new Enum("block"),
+    inline: new Enum("inline"),
+    none: new Enum("none"),
+    flex: new Enum("flex"),
+    grid: new Enum("grid")
 }
 
 
@@ -187,11 +229,13 @@ export const interfaceEnums = {
 
 export class Interface extends Node_sys_layer {
     mode: (typeof interfaceEnums)[keyof typeof interfaceEnums]
-    constructor(mode: (typeof interfaceEnums)[keyof typeof interfaceEnums], label?: string, ID: string) {
+    root: UIRoot
+    constructor(mode: (typeof interfaceEnums)[keyof typeof interfaceEnums], root: UIRoot, label?: string, ID: string) {
         super(label, ID)
         this.setType(fixedIds.types.interface)
         this.tag(fixedIds.tags.internal.functional)
         this.mode = mode
+        this.root = root
     }
 
 }
@@ -211,5 +255,12 @@ const types = new Container("types", [
 ])
 
 
+const renderFileServer = express()
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename)
 
+renderFileServer.get("/", (request, response) => {
+    response.sendFile(path.join(dirname(__filename), "draft.html"))
+})
 
+renderFileServer.listen(3000)
