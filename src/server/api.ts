@@ -263,4 +263,9 @@ renderFileServer.get("/", (request, response) => {
     response.sendFile(path.join(dirname(__filename), "draft.html"))
 })
 
+
+renderFileServer.get("/test", (request, response) => {
+    response.sendFile(path.join(dirname(__filename), "thing.html"))
+})
+
 renderFileServer.listen(3000)

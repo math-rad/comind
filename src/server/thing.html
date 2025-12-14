@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>MathLive Scratchpad</title>
+
+    <!-- MathLive -->
+    <script src="https://unpkg.com/mathlive"></script>
+
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 2rem;
+            background-color: #000;
+        }
+
+        math-field {
+            width: 100%;
+            min-height: 3rem;
+            font-size: 1.5rem;
+            border: 1px solid white;
+            border-radius: 6px;
+            padding: 0.5rem;
+
+            background-color: black;
+            color: white;   
+            caret-color: white;
+
+            --contains-highlight-background-color: transparent;
+            --placeholder-color: transparent;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <math-field id="mf" smart-superscript="false"></math-field>
+
+    <script>
+
+    </script>
+
+</body>
+
+</html>
