@@ -6,6 +6,8 @@ import fixedIds from "./fixed-ids.json" with {type: "json"}
 import { execPath } from "process"
 import path, { dirname } from "path"
 import { fileURLToPath } from "url"
+import http from "http"
+import WebSocket, { WebSocketServer } from "ws"
 
 type Predicate<T> = (item: T) => boolean
 
@@ -256,16 +258,29 @@ const types = new Container("types", [
 
 
 const renderFileServer = express()
+renderFileServer.use(express.static("public"))
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename)
 
-const ws = new WebSocket("ws://localhost:3001")
+
+const server = http.createServer(renderFileServer)
+
+const ws = new WebSocketServer({
+    port: 3001,
+})
+
+
 const stuff = {}
-ws.addEventListener('open', event => {
+
+ws.on('open', event => {
   console.log('WebSocket connection established!');
   // Sends a message to the WebSocket server.
 });
-ws.addEventListener("message", (event) => {
+ws.on("error", err => {
+    console.log(err)
+})
+ws.on("message", (event) => {
+    console.log("hey")
     const data = JSON.parse(event.data)
     switch (data.type) {
         case "command": {
@@ -286,4 +301,4 @@ renderFileServer.get("/test", (request, response) => {
     response.sendFile(path.join(dirname(__filename), "thing.html"))
 })
 
-renderFileServer.listen(3000)
+server.listen(3000)
