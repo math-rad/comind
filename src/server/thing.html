@@ -38,22 +38,31 @@
 
     <math-field id="mf" default-mode="display" smart-superscript="false" value="\displaylines{}"></math-field>
     <math-field id="interface" default-mode="text" smart-superscript="false"></math-field>
+    <math-field readonly id="log" default-mode="text" smart-superscript="false"></math-field>
     <script>
         const mf = document.getElementById("mf")
         const interface = document.getElementById("interface")
-        const ws = new WebSocket(`wss://${window.location.host}/proxy/3002`)
-        alert(`wss://${window.location.host}/proxy/3002/`)
-        ws.addEventListener("open", (event) => {
-            alert("hey")
-        })
-        ws.addEventListener("error", err => {
-            alert(JSON.stringify(err))
-        })
+        const ws = new WebSocket(`wss://${window.location.host}/proxy/3001`)
+        const callbacks = {
+            loadContent: function(content) {
+                mf.value = content
+            }
+        }
         ws.addEventListener("message", event => {
             const data = JSON.parse(event.data)
             switch(data.type) {
-                case "set": {
-                    mf.latex = data.payload
+                case "directive": {
+                    console.log("was directive")
+                    const directive = data.directive
+                    const callback = callbacks[directive.callback]
+                    if (callback) {
+                        console.log("was callback")
+                        const parameters = []
+                        directive.implements.forEach(index => {
+                            parameters.push(data[index])
+                        }); 
+                        callback(...parameters)
+                    }
                 }
             }
         })
@@ -69,7 +78,6 @@
                 interface.value = ""
             }
         })
-
 
     </script>
 

@@ -8,6 +8,7 @@ import path, { dirname } from "path"
 import { fileURLToPath } from "url"
 import http from "http"
 import WebSocket, { WebSocketServer } from "ws"
+import { assert } from "console"
 
 type Predicate<T> = (item: T) => boolean
 
@@ -162,7 +163,7 @@ class UIElement extends Node_sys_layer {
 }
 
 class UIRoot extends UIElement {
-    constructor(ID?: string, ) {
+    constructor(ID?: string,) {
         super(ID)
     }
 }
@@ -171,7 +172,7 @@ class UIText extends UIElement {
     text: string
     constructor(text: string, ID?: string) {
         super(ID)
-        this.text= text
+        this.text = text
     }
 }
 
@@ -265,32 +266,121 @@ const __dirname = dirname(__filename)
 
 const server = http.createServer(renderFileServer)
 
-const ws = new WebSocketServer({
+const wss = new WebSocketServer({
     port: 3001,
 })
 
 
 const stuff = {}
 
-ws.on('open', event => {
-  console.log('WebSocket connection established!');
-  // Sends a message to the WebSocket server.
-});
-ws.on("error", err => {
-    console.log(err)
-})
-ws.on("message", (event) => {
-    console.log("hey")
-    const data = JSON.parse(event.data)
-    switch (data.type) {
-        case "command": {
-            const input = data.payload
-            const command = data.command
-            console.log(input)
-            console.log(command)
-        }
+
+type responseType = "response" | "output" | "error" | "directive"
+
+class WSProtocolObject {
+    type: responseType
+    payload: string | Object
+}
+
+class WSProtocolError extends WSProtocolObject {
+    error: string
+    constructor(err: string) {
+        super()
+        this.type = "error"
+        this.error = err
     }
+}
+
+class WSProtocolResponse extends WSProtocolObject {
+    constructor(response: string) {
+        super()
+        this.type = "response"
+        this.payload = response
+    }
+}
+
+type ProtocolDirective = {
+        "type": string,
+        update?: string,
+        interface?: string,
+        callback: string,
+        implements: string[]
+    }
+
+class WSProtocolDirective extends WSProtocolObject {
+    directive: ProtocolDirective
+    constructor(directive: ProtocolDirective, payload: string) {
+        super()
+        this.type = "directive"
+        this.directive = directive
+        this.payload = payload
+    }
+}
+
+
+
+class WSProtocol {
+    socket: WebSocket
+    constructor(websocket: WebSocket) {
+        this.socket = websocket
+    }
+
+    send(response: WSProtocolObject) {
+        this.socket.send(JSON.stringify(response))
+    }
+}
+
+wss.on("connection", (ws) => {
+    const protocol = new WSProtocol(ws)
+
+
+    ws.on("message", (Data) => {
+        const data = JSON.parse(Data.toString())
+        switch (data.type) {
+            case "command": {
+                const payload = data.payload
+                const command = data.command
+                const cmdFormat = RegExp('^:\\S+(\\s+\\S)*')
+                if (cmdFormat.test(command)) {
+                    const tokens = (command as string).substring(1).split(/\s+/)
+                    switch(tokens.shift()) {
+                        case "saveas": {
+                            const key = tokens.shift()
+                            if (!key) {
+                                return protocol.send(
+                                    new WSProtocolError("saveas command requires second parameter \"key\"")
+                                )
+                            } else {
+                                stuff[key] = payload
+                                return protocol.send(
+                                    new WSProtocolResponse(`set ${key}`)
+                                )
+                            }
+                        }
+                        case "load": {
+                            const key = tokens.shift()
+                            if (!key) {
+                                return protocol.send(
+                                    new WSProtocolError("load command requires second parameter \"key\"")
+                                )
+                            } else {
+                                return protocol.send(
+                                    new WSProtocolDirective({
+                                        "type": "UI",
+                                        "update": "interface",
+                                        "interface": "",
+                                        "callback": "loadContent",
+                                        "implements": ["payload"]
+                                    }, stuff[key])
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
 })
+
 
 renderFileServer.get("/", (request, response) => {
     response.sendFile(path.join(dirname(__filename), "draft.html"))
