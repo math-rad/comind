@@ -259,6 +259,24 @@ const renderFileServer = express()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename)
 
+const ws = new WebSocket("ws://localhost:3001")
+const stuff = {}
+ws.addEventListener('open', event => {
+  console.log('WebSocket connection established!');
+  // Sends a message to the WebSocket server.
+});
+ws.addEventListener("message", (event) => {
+    const data = JSON.parse(event.data)
+    switch (data.type) {
+        case "command": {
+            const input = data.payload
+            const command = data.command
+            console.log(input)
+            console.log(command)
+        }
+    }
+})
+
 renderFileServer.get("/", (request, response) => {
     response.sendFile(path.join(dirname(__filename), "draft.html"))
 })

@@ -36,9 +36,34 @@
 
 <body>
 
-    <math-field id="mf" smart-superscript="false"></math-field>
-
+    <math-field id="mf" default-mode="display" smart-superscript="false" value="\displaylines{}"></math-field>
+    <math-field id="interface" default-mode="text" smart-superscript="false"></math-field>
     <script>
+        const mf = document.getElementById("mf")
+        const interface = document.getElementById("interface")
+        const ws = new WebSocket(`wss://${window.location.host}/proxy/3001`)
+        alert(`wss://${window.location.host}/proxy/3001/`)
+        ws.addEventListener("message", event => {
+            const data = JSON.parse(event.data)
+            switch(data.type) {
+                case "set": {
+                    mf.latex = data.payload
+                }
+            }
+        })
+
+
+        interface.addEventListener("input", event => {
+            if (event.inputType === "insertLineBreak") {
+                ws.send(JSON.stringify({
+                    "type": "command",
+                    "command": interface.value,
+                    "payload": mf.value
+                }))
+                interface.value = ""
+            }
+        })
+
 
     </script>
 
