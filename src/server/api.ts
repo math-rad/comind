@@ -343,6 +343,16 @@ wss.on("connection", (ws) => {
                 if (cmdFormat.test(command)) {
                     const tokens = (command as string).substring(1).split(/\s+/)
                     switch(tokens.shift()) {
+                        case "list": {
+
+                            return  protocol.send(new WSProtocolDirective({
+                                        "type": "UI",
+                                        "update": "interface",
+                                        "interface": "",
+                                        "callback": "loadContent",
+                                        "implements": ["payload"]
+                                    }, Object.keys(stuff).map(str => `\\text{${str}}`).join("\\text{ }")))
+                        }
                         case "saveas": {
                             const key = tokens.shift()
                             if (!key) {
